@@ -27,23 +27,22 @@ app.get(`/`, async (req, res) => {
     res.status(200).json({ success: true })
 })
 
-const sch ={
-    id: Number,
+const sch = new mongoose.Schema({
+    // id: Number,
     name: String,
     username: String,
     email: String,
     phone: String,
     address: [{
-        street: {String},
-        city: {String},
-        zipcode: {String},
+        street: String,
+        city: String,
+        zipcode: String,
         geo: [{
-            lat: {String},
-            lng: {String}
+            lat: String,
+            lng: String
         }],
-    
     }]
-}
+})
 
 const mongomodel = mongoose.model("users", sch)
 
@@ -57,21 +56,23 @@ app.post("/post", async(req, res) =>{
     console.log("Inside post");
 
     const data = new mongomodel({
-        id:req.body.id,
+        // id:req.body.id,
         name:req.body.name,
         username:req.body.username,
         email:req.body.email,
         phone:req.body.phone,
-        address: [{
-            street: req.body.street,
-            city: req.body.city,
-            zipcode: req.body.zipcode,
-            geo: [{
-                lat: req.body.lat,
-                lng: req.body.lng
-            }]
+        // address: [{
+        //     street: req.body.street,
+        //     city: req.body.city,
+        //     zipcode: req.body.zipcode,
+        //     geo: [{
+        //         lat: req.body.lat,
+        //         lng: req.body.lng
+        //     }]
         
-        }]
+        // }]
+        address:req.body.address,
+        geo:req.body.geo
     })   
 
     const val=await data.save()
@@ -85,11 +86,13 @@ app.put("/update/:id", async(req, res) =>{
 
     mongomodel.findOneAndUpdate({_id:req.params.id}, {
         $set:{
-            id:req.body.id,
+            // id:req.body.id,
             name:req.body.name,
             username:req.body.username,
             email:req.body.email,
             phone:req.body.phone,
+            address:req.body.address,
+            geo:req.body.geo
         }
     })
     .then(result=>{
